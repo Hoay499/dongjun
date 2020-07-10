@@ -1,0 +1,53 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title></title>
+        <style type="text/css">
+            *{color: #838383;margin: 0;padding: 0}
+            html,body {font-size: 12px;overflow: hidden; }
+            .content{padding:5px 0 0 15px;}
+            input{width:210px;height:21px;line-height:21px;margin-left: 4px;}
+        </style>
+    </head>
+    <body>
+        <div class="content">
+            <span><var id="lang_input_anchorName"></var></span><input id="anchorName"  value="" />
+        </div>
+        <script type="text/javascript" src="../internal.js"></script>
+        <script type="text/javascript">
+			//获得本页面id 为anchorName的标签赋值给anchorInput;
+			//获取 editor 下的啥赋值给node ;
+            var anchorInput = $G('anchorName'),
+                node = editor.selection.getRange().getClosedNode();
+			// 如果node(那啥) 存在 且node(那啥) 的标签 是 IMG 标签, 并且 
+			// 如果以上条件满足,则将node(那啥) 赋值给本页面的 anchorInput 的值
+            if(node && node.tagName == 'IMG' && (node = node.getAttribute('anchorname'))){
+                anchorInput.value = node;
+            }
+			//监听输入框
+            anchorInput.onkeydown = function(evt){
+				// 在做事件处理时，用于区分IE和其他浏览器事件对象。
+                evt = evt || window.event;
+				//如果输入回车键
+                if(evt.keyCode == 13){
+					
+                    editor.execCommand('anchor', anchorInput.value);
+                    dialog.close();//关闭对话框
+					// 取消domUtils事件的默认动作,通知 Web 浏览器不要执行与事件关联的默认动作（如果存在这样的动作）
+// 					例如，如果 type 属性是 "submit"，在事件传播的任意阶段可以调用任意的事件句柄，通过调用该方法，可以阻止提交表单。
+// 					注意，如果 Event 对象的 cancelable 属性是 fasle，那么就没有默认动作，或者不能阻止默认动作。无论哪种情况，调用该方法都没有作用。
+                    domUtils.preventDefault(evt)
+                }
+            };
+			// 对话框点击ok时执行
+            dialog.onok = function (){
+                editor.execCommand('anchor', anchorInput.value);
+                dialog.close();
+            };
+			//输入框聚焦
+            $focus(anchorInput);
+        </script>
+    </body>
+</html>
